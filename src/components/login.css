@@ -11,7 +11,7 @@ body {
 
 /* Glass login container */
 .login-container {
-  width: 90%;
+  width: 50vw;
   max-width: 400px;
   padding: 30px 25px;
   border-radius: 12px;
@@ -107,4 +107,13 @@ body {
 
 .success {
   color: #2ecc71;
+}
+
+.register{
+  color: rgb(101, 184, 236);
+}
+
+.register:hover{
+  color: rgb(188, 213, 229);
+
 }

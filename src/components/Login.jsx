@@ -72,6 +72,7 @@ function Login() {
         </div>
         <button type="submit">Login</button>
       </form>
+      <a className="register" href="/register">Register</a>
 
       <div className="status-message">
         {status === "not" && (
