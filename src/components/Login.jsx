@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
@@ -8,6 +8,23 @@ function Login() {
   const [status, setStatus] = useState("");
   const navigate = useNavigate();
 
+  // ✅ Check if user is already logged in
+  useEffect(() => {
+    fetch("http://localhost:2000/dashboard", {
+      method: "GET",
+      credentials: "include", // send cookie
+    })
+      .then(res => {
+        console.log(res);
+        if (res.status === 200) {
+          navigate("/dashboard"); // user is logged in, redirect
+        }
+      })
+      .catch(err => {
+        console.log("Not logged in", err);
+      });
+  }, [navigate]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("");
@@ -16,17 +33,15 @@ function Login() {
       const res = await fetch("http://localhost:2000/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ login, password }),
       });
 
       const data = await res.json();
-      setStatus(data.status); // "logged" or "not logged"
-      console.log(data);
+      setStatus(data.status);
+
       if (data.status === "logged") {
-        // redirect after successful login
-        navigate("/dashboard", { state: { username: data.login } });
-      } else{
-        setStatus(data.status);
+        navigate("/dashboard"); // redirect after login
       }
     } catch (err) {
       setStatus("network error");
