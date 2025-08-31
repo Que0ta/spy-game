@@ -53,7 +53,7 @@ function Login() {
       <h2>Login into account</h2>
       <form className="login-form" onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Login:</label>
+          <label>Username:</label>
           <input
             type="text"
             value={login}
