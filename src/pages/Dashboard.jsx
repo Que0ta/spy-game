@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "./Dashboard.css";
 
 function Dashboard() {
   const handleLogout = async () => {
@@ -50,7 +51,7 @@ function Dashboard() {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div>
+    <div className="dashboard">
       <h2>Welcome, {user}!</h2>
       <p>This is your secure dashboard.</p>
       <button onClick={handleLogout}>Logout</button>

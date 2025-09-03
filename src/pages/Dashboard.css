@@ -1,0 +1,10 @@
+.dashboard {
+  background-color: rgba(255, 255, 255, 0.616);
+  border-radius: 16px;
+  box-shadow: 0 8px 62px 10px rgba(120, 172, 236, 0.37);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 1.5rem;
+}
+
+

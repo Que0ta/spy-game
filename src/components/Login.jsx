@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import verifyUser from "../hooks/verify";
 import "./Login.css";
 
 function Login() {
@@ -9,21 +10,7 @@ function Login() {
   const navigate = useNavigate();
 
   // ✅ Check if user is already logged in
-  useEffect(() => {
-    fetch("http://localhost:2000/dashboard", {
-      method: "GET",
-      credentials: "include", // send cookie
-    })
-      .then(res => {
-        console.log(res);
-        if (res.status === 200) {
-          navigate("/dashboard"); // user is logged in, redirect
-        }
-      })
-      .catch(err => {
-        console.log("Not logged in", err);
-      });
-  }, [navigate]);
+  verifyUser('/dashboard');
 
   const handleSubmit = async (e) => {
     e.preventDefault();

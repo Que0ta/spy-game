@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import verifyUser from "../hooks/verify";
 
 function Registration() {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  // check for status auth of user
+  verifyUser('/dashboard');
 
   const handleSubmitRegister = async (e) => {
     e.preventDefault();
@@ -16,7 +20,6 @@ function Registration() {
         credentials: "include",
         body: JSON.stringify({ login, password }),
       });
-
       navigate("/"); // redirect after register
     } catch (err) {
       navigate("/"); // error handling needs to be added!
