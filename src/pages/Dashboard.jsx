@@ -1,27 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
+import { UserContext } from "../App";
+import { useVerifyUser } from "../hooks/verifyUser";
+import LogoutButton from "../components/LogoutButton";
 
 function Dashboard() {
-  const handleLogout = async () => {
-    try {
-      const res = await fetch("http://localhost:2000/logout", {
-        method: "POST",
-        credentials: "include", // send cookie to delete
-      });
-
-      const data = await res.json();
-      console.log(data);
-
-      // Clear user state and redirect
-      setUser(null);
-      navigate("/");
-    } catch (err) {
-      console.log("Logout error:", err);
-    }
-  };
-
-  const [user, setUser] = useState(null);
+  const {user, setUser} = useContext(UserContext);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -47,14 +32,15 @@ function Dashboard() {
         navigate("/");
       });
   }, [navigate]);
-
+  
   if (loading) return <p>Loading...</p>;
 
   return (
     <div className="dashboard">
       <h2>Welcome, {user}!</h2>
       <p>This is your secure dashboard.</p>
-      <button onClick={handleLogout}>Logout</button>
+      <LogoutButton> </LogoutButton>
+      <a href="/game">test</a>
     </div>
   );
 }

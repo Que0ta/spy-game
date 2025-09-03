@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import verifyUser from "../hooks/verify";
+import { useVerifyUser } from "../hooks/verifyUser";
 
 function Registration() {
   const [login, setLogin] = useState("");
@@ -8,7 +8,7 @@ function Registration() {
   const navigate = useNavigate();
 
   // check for status auth of user
-  verifyUser('/dashboard');
+  useVerifyUser('/dashboard');
 
   const handleSubmitRegister = async (e) => {
     e.preventDefault();

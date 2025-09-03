@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import verifyUser from "../hooks/verify";
+import { useVerifyUser } from "../hooks/verifyUser";
+import { UserContext } from "../App";
 import "./Login.css";
 
 function Login() {
@@ -9,8 +10,10 @@ function Login() {
   const [status, setStatus] = useState("");
   const navigate = useNavigate();
 
+  const { user, setUser } = useContext(UserContext);
+
   // ✅ Check if user is already logged in
-  verifyUser("/dashboard");
+  useVerifyUser("/dashboard");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,12 +31,14 @@ function Login() {
       setStatus(data.status);
 
       if (data.status === "logged") {
+        setUser(data.user); // update context
         navigate("/dashboard"); // redirect after login
       }
     } catch (err) {
       setStatus("network error");
     }
   };
+
 
   return (
     <div className="login-container">
