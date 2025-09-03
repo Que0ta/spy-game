@@ -22,7 +22,7 @@ function LogoutButton() {
     }
   };
 
-  return <button onClick={handleLogout}>Logout</button>;
+  return <button className="logout" onClick={handleLogout}>Вихід</button>;
 }
 
 export default LogoutButton;

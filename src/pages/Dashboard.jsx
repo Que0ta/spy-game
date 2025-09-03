@@ -6,9 +6,32 @@ import { useVerifyUser } from "../hooks/verifyUser";
 import LogoutButton from "../components/LogoutButton";
 
 function Dashboard() {
-  const {user, setUser} = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const [balance, setBalance] = useState(null);
+ 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const res = await fetch("http://localhost:2000/users", {
+          method: "GET",
+          credentials: "include",
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setBalance(data.balance);
+          setUser(data.username); // update context if needed
+        } else {
+          console.log("Failed to fetch user data");
+        }
+      } catch (err) {
+        console.error("Error fetching user data:", err);
+      }
+    };
+
+    fetchUserData();
+  }, [setUser]);
 
   useEffect(() => {
     fetch("http://localhost:2000/dashboard", {
@@ -32,15 +55,26 @@ function Dashboard() {
         navigate("/");
       });
   }, [navigate]);
-  
+
   if (loading) return <p>Loading...</p>;
 
   return (
     <div className="dashboard">
-      <h2>Welcome, {user}!</h2>
-      <p>This is your secure dashboard.</p>
-      <LogoutButton> </LogoutButton>
-      <a href="/game">test</a>
+      {/* Top bar */}
+      <div className="top-bar">
+        <div className="top-right">
+          <span className="balance">{balance}</span>
+          <LogoutButton />
+        </div>
+      </div>
+      <h2 className="welcome">👤{user}</h2>
+
+      {/* Main buttons */}
+      <div className="button-group">
+        <a className="game" href="/game"><button className="btn single">Одиночна гра</button></a>
+        <a className="game" href="/game"><button className="btn multi">Групова гра</button></a>
+      </div>
+
     </div>
   );
 }

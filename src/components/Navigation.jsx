@@ -4,7 +4,6 @@ import { UserContext } from "../App";
 import { useVerifyUser } from "../hooks/verifyUser";
 import LogoutButton from "./LogoutButton";
 
-
 function Navigation(){
     const { user,setUser } = useContext(UserContext);
     useVerifyUser("/game");
