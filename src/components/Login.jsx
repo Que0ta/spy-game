@@ -10,7 +10,7 @@ function Login() {
   const navigate = useNavigate();
 
   // ✅ Check if user is already logged in
-  verifyUser('/dashboard');
+  verifyUser("/dashboard");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,7 +37,7 @@ function Login() {
 
   return (
     <div className="login-container">
-      <h2>Login into account</h2>
+      <h2>Log into account</h2>
       <form className="login-form" onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Username:</label>
@@ -59,19 +59,25 @@ function Login() {
         </div>
         <button type="submit">Login</button>
       </form>
-      <a className="register" href="/register">Register</a>
+      <a className="register" href="/register">
+        Register
+      </a>
 
-      <div className="status-message">
-        {status === "not" && (
-          <span className="not-found">Логіну не знайдено!</span>
-        )}
-        {status === "network error" && (
-          <span className="not-found">Помилка мережі!</span>
-        )}
-        {status === "pass" && (
-          <span className="not-found">Неправильний пароль!</span>
-        )}
-      </div>
+      {status ? (
+        <div className="status-message">
+          {status === "not" && (
+            <span className="not-found">Логіну не знайдено!</span>
+          )}
+          {status === "network error" && (
+            <span className="not-found">Помилка мережі!</span>
+          )}
+          {status === "pass" && (
+            <span className="not-found">Неправильний пароль!</span>
+          )}
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 }
