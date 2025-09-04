@@ -14,7 +14,7 @@ export const SpyAmount = createContext();
 
 function App() {
   const [user, setUser] = useState(null);
-  const [spies, setSpies] = useState({});
+  const [spies, setSpies] = useState({amount: 1});
   const [players, setPlayers] = useState({});
 
   return (

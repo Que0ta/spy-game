@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { UserContext, PlayersContext } from "../App";
 import { useVerifyUser } from "../hooks/verifyUser";
 import AddUser from "./UserAdd";
+import SpyAmountComponent from "./SpyAmount";
 import "./Navigate.css";
 
 function Navigation() {
@@ -35,20 +36,15 @@ function Navigation() {
         {Object.entries(players).map(([key, value]) => (
           <li className="user" key={key}>
             <span>{value}</span>
-            <button className="deleteUser" onClick={() => handleDelete(key)}>
-              ✕
-            </button>
+            {user != value ? <button className="deleteUser" onClick={() => handleDelete(key)}>
+                ✕
+                </button> : ''}
           </li>
         ))}
       </ul>
       <AddUser />
-
-      <div className="spy-amount">
-
-      </div>
-      <div className="word-list">
-
-      </div>
+    <SpyAmountComponent />
+      
     </div>
   );
 }
