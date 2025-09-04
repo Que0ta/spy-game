@@ -1,31 +1,29 @@
 import { useEffect, useContext } from "react";
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { UserContext } from "../App";
 
-export function useVerifyUser(directTO) {
-  const { user, setUser } = useContext(UserContext);
+export function useVerifyUser(redirectTo = "/dashboard") {
   const navigate = useNavigate();
+  const { setUser } = useContext(UserContext);
 
   useEffect(() => {
-    const checkUser = async () => {
+    const checkAuth = async () => {
       try {
         const res = await fetch("http://localhost:2000/dashboard", {
           method: "GET",
-          credentials: "include",
+          credentials: "include", // send cookies
         });
-        if (res.status === 200) {
+
+        if (res.ok) {
           const data = await res.json();
-          setUser(data.user); // update context
-          navigate(directTO); // redirect
-        } else {
-          navigate("/"); // not logged in
+          setUser(data.user);
+          navigate(redirectTo); // already logged in → redirect
         }
       } catch (err) {
-        console.log("Not logged in", err);
-        navigate("/");
+        // user not logged in → ignore
       }
     };
 
-    checkUser();
-  }, [navigate, directTO, setUser]);
+    checkAuth();
+  }, [navigate, setUser, redirectTo]);
 }

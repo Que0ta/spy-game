@@ -7,8 +7,7 @@ function Registration() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  // check for status auth of user
-  useVerifyUser('/dashboard');
+  useVerifyUser("/dashboard");
 
   const handleSubmitRegister = async (e) => {
     e.preventDefault();

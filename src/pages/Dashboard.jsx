@@ -63,7 +63,7 @@ function Dashboard() {
       {/* Top bar */}
       <div className="top-bar">
         <div className="top-right">
-          <span className="balance">{balance}</span>
+          <span className="balance">${balance}</span>
           <LogoutButton />
         </div>
       </div>
@@ -71,8 +71,8 @@ function Dashboard() {
 
       {/* Main buttons */}
       <div className="button-group">
-        <a className="game" href="/game"><button className="btn single">Одиночна гра</button></a>
-        <a className="game" href="/game"><button className="btn multi">Групова гра</button></a>
+        <a className="game" href="/game-settings"><button className="btn single">Одиночна гра</button></a>
+        <a className="game" href="/game-settings"><button className="btn multi">Групова гра</button></a>
       </div>
 
     </div>

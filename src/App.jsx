@@ -7,18 +7,29 @@ import { createContext, useState } from "react";
 
 export const UserContext = createContext();
 
+// variables for game parameters
+export const PlayersContext = createContext();
+export const SpyAmount = createContext();
+
+
 function App() {
   const [user, setUser] = useState(null);
+  const [spies, setSpies] = useState({});
+  const [players, setPlayers] = useState({});
 
   return (
-    <UserContext.Provider value={{user, setUser}}>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Registration />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/game" element={<Navigation />} />
-      </Routes>
-    </UserContext.Provider>
+    <SpyAmount.Provider value={{ spies, setSpies }}>
+      <PlayersContext.Provider value={{ players, setPlayers }}>
+        <UserContext.Provider value={{ user, setUser }}>
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/register" element={<Registration />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/game-settings" element={<Navigation />} />
+          </Routes>
+        </UserContext.Provider>
+      </PlayersContext.Provider>
+    </SpyAmount.Provider>
   );
 }
 
