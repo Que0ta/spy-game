@@ -4,6 +4,7 @@ import { UserContext, PlayersContext } from "../App";
 import { useVerifyUser } from "../hooks/verifyUser";
 import AddUser from "./UserAdd";
 import SpyAmountComponent from "./SpyAmount";
+import {WordList} from "./Words";
 import "./Navigate.css";
 
 function Navigation() {
@@ -36,15 +37,20 @@ function Navigation() {
         {Object.entries(players).map(([key, value]) => (
           <li className="user" key={key}>
             <span>{value}</span>
-            {user != value ? <button className="deleteUser" onClick={() => handleDelete(key)}>
+            {user != value ? (
+              <button className="deleteUser" onClick={() => handleDelete(key)}>
                 ✕
-                </button> : ''}
+              </button>
+            ) : (
+              ""
+            )}
           </li>
         ))}
       </ul>
       <AddUser />
-    <SpyAmountComponent />
-      
+      <SpyAmountComponent />
+      <WordList />
+      <a href="/dashboard">back to dash</a>
     </div>
   );
 }
