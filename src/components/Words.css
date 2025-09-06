@@ -125,3 +125,8 @@
 i{
     color: #ecac16;
 }
+
+.word-list .custom.selected{
+  background: #ecac16;
+}
+

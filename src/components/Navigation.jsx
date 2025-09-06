@@ -1,13 +1,36 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext, PlayersContext } from "../App";
 import { useVerifyUser } from "../hooks/verifyUser";
 import AddUser from "./UserAdd";
 import SpyAmountComponent from "./SpyAmount";
 import {WordList} from "./Words";
+import { CustomWordAdd } from "./CustomWordAdd";
 import "./Navigate.css";
 
 function Navigation() {
+  const navigate = useNavigate();
+  useEffect(() => {
+      fetch("http://localhost:2000/dashboard", {
+        method: "GET",
+        credentials: "include", // sends cookie
+      })
+        .then((res) => {
+          if (!res.ok) {
+            navigate("/"); // unauthorized
+            return null;
+          }
+          return res.json();
+        })
+        .then((data) => {
+          if (data?.user) setUser(data.user);
+        })
+        .catch((err) => {
+          console.log(err);
+          navigate("/");
+        });
+    }, [navigate]);
+
   const { user, setUser } = useContext(UserContext);
   const { players, setPlayers } = useContext(PlayersContext);
 
@@ -50,7 +73,11 @@ function Navigation() {
       <AddUser />
       <SpyAmountComponent />
       <WordList />
-      <a href="/dashboard">back to dash</a>
+      <CustomWordAdd /> 
+      <div className="menu-buttons">
+        <a className="back-menu" href="/dashboard">Назад</a>
+        <button>Нова гра</button>
+      </div>
     </div>
   );
 }

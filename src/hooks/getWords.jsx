@@ -32,5 +32,5 @@ export function useWords() {
     fetchWords();
   }, []);
 
-  return { words, checked, setChecked, loading, error };
+  return { words, setWords, checked, setChecked, loading, error };
 }
