@@ -10,7 +10,7 @@ export function WordList() {
   
   // Fetch custom words after component mounts
   useEffect(() => {
-    if (customWordsFunc) customWordsFunc(); // call hook’s fetch function when added new word
+    customWordsFunc(); // call hook’s fetch function when added new word
   }, [customWordsFunc]);
   
   if (loading) return <p>Loading words...</p>;

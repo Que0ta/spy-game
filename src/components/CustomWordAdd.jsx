@@ -32,12 +32,13 @@ export function CustomWordAdd({ reloadCustomWords } ) {
     }
   };
 
-  if (!addStatus && statusMessage) statusMessage.style.display = "none";
-  else if (addStatus && statusMessage) {
+  if (addStatus === 'false') statusMessage.style.display = "none";
+  else if (addStatus === 'success') {
     statusMessage.style.display = "block";
     setTimeout(()=>{
       statusMessage.style.display = 'none';
       statusMessage.classList.remove('success');
+      setaddStatus(null);
     }, 1000)
   }
 

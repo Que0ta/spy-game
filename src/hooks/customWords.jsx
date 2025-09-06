@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 export function loadCustomWords() {
   const [customWords, setCustom] = useState(null);
   const [loadingCustom, setLoading] = useState(true);
   const [errorCustom, setError] = useState(null);
 
-  
-  const customWordsFunc = async () => {
+  // memoizable func to avoid re-rendering of the same hook
+  const customWordsFunc = useCallback(async () => {
     try {
       const response = await fetch("http://localhost:2000/custom", {
         method: "GET",
@@ -18,13 +18,12 @@ export function loadCustomWords() {
       const result = await response.json();
       setCustom(result);
       setError(null);
-      console.log(customWords);
     } catch (error) {
       console.error("Error sending data:", error);
     } finally{
         setLoading(false);
     }
-  };
+  });
 
   useEffect( ()=> {
     customWordsFunc(); // fetched data
