@@ -6,8 +6,12 @@ import "./Words.css";
 
 export function WordList({ customWordsLoad, onData }) {
   const { words, checked, setChecked, loading, error } = useWords();
-  const { customWords, loadingCustom, errorCustom, customWordsFunc } =
-    loadCustomWords();
+  const {
+    customWords = [],
+    loadingCustom,
+    errorCustom,
+    customWordsFunc,
+  } = loadCustomWords();
   // Fetch custom words after component mounts
   // Needs to be fixed later
   // MARK: FIX NEEDED (re-renders too much)
@@ -21,24 +25,26 @@ export function WordList({ customWordsLoad, onData }) {
   if (errorCustom) return <p>Error with custom words: {error}</p>;
 
   if (!words.length) return <p>No words found.</p>;
-
+  
   const handleToggle = (word) => {
-    setChecked((prev) => ({ ...prev, [word]: !prev[word] }));
+    const newChecked = { ...checked, [word]: !checked[word] };
+    setChecked(newChecked);
+    onData(newChecked); // pass the updated state immediately
   };
-
+  
   const checkToggle = () => {
     const allWords = [...words, ...wordCustomShow];
+    const newChecked = {};
     if (allSelected) {
       // Deselect all
-      const newChecked = {};
       allWords.forEach((w) => (newChecked[w] = false));
       setChecked(newChecked);
     } else {
       // Select all
-      const newChecked = {};
       allWords.forEach((w) => (newChecked[w] = true));
       setChecked(newChecked);
     }
+    onData(newChecked); // pass the updated state immediately
   };
 
   const allWords = [...words, ...customWords];

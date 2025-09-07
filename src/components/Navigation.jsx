@@ -4,41 +4,49 @@ import { UserContext, PlayersContext } from "../App";
 import { useVerifyUser } from "../hooks/verifyUser";
 import AddUser from "./UserAdd";
 import SpyAmountComponent from "./SpyAmount";
-import {WordList} from "./Words";
+import { WordList } from "./Words";
 import { CustomWordAdd } from "./CustomWordAdd";
 import "./Navigate.css";
 
 import { loadCustomWords } from "../hooks/customWords";
 import { useWords } from "../hooks/getWords";
 
-
 function Navigation() {
   const navigate = useNavigate();
+  const { words, checked, setChecked, loading, error } = useWords();
   const { customWords, customWordsFunc } = loadCustomWords();
-  useEffect(() => {
-      fetch("http://localhost:2000/dashboard", {
-        method: "GET",
-        credentials: "include", // sends cookie
-      })
-        .then((res) => {
-          if (!res.ok) {
-            navigate("/"); // unauthorized
-            return null;
-          }
-          return res.json();
-        })
-        .then((data) => {
-          if (data?.user) setUser(data.user);
-        })
-        .catch((err) => {
-          console.log(err);
-          navigate("/");
-        });
-    }, [navigate]);
+  const [formData, setFormData] = useState(null);
 
+  const handleFormSubmit = (data) => {
+    setFormData(data);
+    setChecked(data);
+    console.log('check =>',data);
+  };
+  
+  useEffect(() => {
+    fetch("http://localhost:2000/dashboard", {
+      method: "GET",
+      credentials: "include", // sends cookie
+    })
+    .then((res) => {
+      if (!res.ok) {
+        navigate("/"); // unauthorized
+        return null;
+      }
+      return res.json();
+    })
+    .then((data) => {
+      if (data?.user) setUser(data.user);
+    })
+    .catch((err) => {
+      console.log(err);
+      navigate("/");
+    });
+  }, [navigate]);
+  
   const { user, setUser } = useContext(UserContext);
   const { players, setPlayers } = useContext(PlayersContext);
-
+  
   const handleDelete = (id) => {
     setPlayers((prev) => {
       const copy = { ...prev };
@@ -46,7 +54,7 @@ function Navigation() {
       return copy;
     });
   };
-
+  
   useEffect(() => {
     if (user) {
       setPlayers((prev) => ({
@@ -55,9 +63,9 @@ function Navigation() {
       }));
     }
   }, [user, setPlayers]);
-
+  
   useVerifyUser("/game-settings");
-
+  
   return (
     <div className="navigation-panel">
       <h1>Додані гравці:</h1>
@@ -77,10 +85,12 @@ function Navigation() {
       </ul>
       <AddUser />
       <SpyAmountComponent />
-      <WordList customWordsLoad={customWords}/>
-      <CustomWordAdd reloadCustomWords={customWordsFunc}/> 
+      <WordList customWordsLoad={customWords} onData={handleFormSubmit} />
+      <CustomWordAdd reloadCustomWords={customWordsFunc} />
       <div className="menu-buttons">
-        <a className="back-menu" href="/dashboard">Назад</a>
+        <a className="back-menu" href="/dashboard">
+          Назад
+        </a>
         <button>Нова гра</button>
       </div>
     </div>
