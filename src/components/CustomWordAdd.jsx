@@ -21,12 +21,11 @@ export function CustomWordAdd({ reloadCustomWords } ) {
       });
 
       const result = await response.json();
-      console.log("Server response:", result);
+      // console.log("Server response:", result);
       setaddStatus(result.status);
       setWord("");
-      if (result.status === "success" && reloadCustomWords) {
-        reloadCustomWords(); // refresh the customWords list in Words.jsx
-      }
+      reloadCustomWords(); // refresh the customWords list in Words.jsx
+      console.log('added successfully');
     } catch (error) {
       console.error("Error sending data:", error);
     }

@@ -4,27 +4,49 @@ import { useWords } from "../hooks/getWords";
 import { loadCustomWords } from "../hooks/customWords";
 import "./Words.css";
 
-export function WordList() {
+export function WordList({ customWordsLoad, onData }) {
   const { words, checked, setChecked, loading, error } = useWords();
-  const { customWords, loadingCustom, errorCustom, customWordsFunc } = loadCustomWords();
-  
+  const { customWords, loadingCustom, errorCustom, customWordsFunc } =
+    loadCustomWords();
   // Fetch custom words after component mounts
-  useEffect(() => {
-    customWordsFunc(); // call hook’s fetch function when added new word
-  }, [customWordsFunc]);
-  
+  // Needs to be fixed later
+  // MARK: FIX NEEDED (re-renders too much)
+  // Solved 9/7/2025 !!!
+  const wordCustomShow = customWordsLoad || [];
+
   if (loading) return <p>Loading words...</p>;
   if (loadingCustom) return <p>Loading customWords...</p>;
-  
+
   if (error) return <p>Error: {error}</p>;
   if (errorCustom) return <p>Error with custom words: {error}</p>;
-  
+
   if (!words.length) return <p>No words found.</p>;
-  
+
   const handleToggle = (word) => {
     setChecked((prev) => ({ ...prev, [word]: !prev[word] }));
   };
-  
+
+  const checkToggle = () => {
+    const allWords = [...words, ...wordCustomShow];
+    if (allSelected) {
+      // Deselect all
+      const newChecked = {};
+      allWords.forEach((w) => (newChecked[w] = false));
+      setChecked(newChecked);
+    } else {
+      // Select all
+      const newChecked = {};
+      allWords.forEach((w) => (newChecked[w] = true));
+      setChecked(newChecked);
+    }
+  };
+
+  const allWords = [...words, ...customWords];
+  const allSelected = allWords.every((w) => checked[w]);
+
+  // check status of words =>
+  // console.log(checked);
+
   return (
     <div className="frame-word">
       <h3>
@@ -32,6 +54,12 @@ export function WordList() {
         Список вибраних слів
         <br /> <i>(деактивовані - сірий колір)</i>{" "}
       </h3>
+      <button
+        className={`choose-all ${allSelected ? "" : "selected"}`}
+        onClick={checkToggle}
+      >
+        {allSelected ? "Зняти всі" : "Вибрати усі"}
+      </button>
       <ul className="word-list">
         {words.map((word, index) => (
           <li
@@ -42,7 +70,7 @@ export function WordList() {
             <span>{word}</span>
           </li>
         ))}
-        {customWords.map((word, index) => (
+        {wordCustomShow.map((word, index) => (
           <li
             key={index}
             className={`custom ${checked[word] ? "selected" : ""}`}

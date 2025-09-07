@@ -23,11 +23,11 @@ export function loadCustomWords() {
     } finally{
         setLoading(false);
     }
-  });
+  }, []);
 
   useEffect( ()=> {
     customWordsFunc(); // fetched data
-  }, []);
+  }, [customWordsFunc]);
 
-  return { customWords, loadingCustom, errorCustom, customWordsFunc };
+  return { customWords, loadingCustom, errorCustom, customWordsFunc, setCustom };
 }

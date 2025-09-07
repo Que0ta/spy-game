@@ -8,8 +8,13 @@ import {WordList} from "./Words";
 import { CustomWordAdd } from "./CustomWordAdd";
 import "./Navigate.css";
 
+import { loadCustomWords } from "../hooks/customWords";
+import { useWords } from "../hooks/getWords";
+
+
 function Navigation() {
   const navigate = useNavigate();
+  const { customWords, customWordsFunc } = loadCustomWords();
   useEffect(() => {
       fetch("http://localhost:2000/dashboard", {
         method: "GET",
@@ -72,8 +77,8 @@ function Navigation() {
       </ul>
       <AddUser />
       <SpyAmountComponent />
-      <WordList />
-      <CustomWordAdd /> 
+      <WordList customWordsLoad={customWords}/>
+      <CustomWordAdd reloadCustomWords={customWordsFunc}/> 
       <div className="menu-buttons">
         <a className="back-menu" href="/dashboard">Назад</a>
         <button>Нова гра</button>

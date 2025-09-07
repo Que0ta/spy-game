@@ -27,6 +27,15 @@
 
 /*  */
 /*  */
+/* Word list */
+.frame-word .word-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
 /* Frame wrapper */
 .frame-word {
   max-width: 70vw;
@@ -41,15 +50,6 @@
   margin: 10px 0;
 }
 
-/* Word list */
-.frame-word .word-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
 
 /* Word items with checkbox */
 .frame-word .word-list li {
@@ -130,3 +130,38 @@ i{
   background: #ecac16;
 }
 
+.choose-all {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
+  color: white;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+/* Default (not all selected) - red */
+.choose-all {
+  background-color: #ff4d4d;
+  box-shadow: 0 4px 12px rgba(255, 77, 77, 0.4);
+  display: block; 
+  margin: 15px auto;
+  outline: none;
+}
+
+.choose-all.selected {
+  background-color: #4caf50; /* green */
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+.choose-all:hover {
+  transform: translateY(-2px);
+  outline: none;
+}
+
+.choose-all:active {
+  transform: translateY(0);
+  outline: none;
+}
