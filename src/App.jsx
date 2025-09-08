@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router-dom";
-import Login from "./components/Login.jsx";
+import Login from "./pages/Login.jsx";
 import Dashboard from "./pages/Dashboard.jsx"; // ✅ updated path
-import Navigation from "./components/Navigation.jsx";
-import Registration from "./components/Register.jsx";
+import Navigation from "./pages/Navigation.jsx";
+import Registration from "./pages/Register.jsx";
 import { createContext, useState } from "react";
 
 export const UserContext = createContext();

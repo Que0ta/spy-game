@@ -1,11 +1,11 @@
 import { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { UserContext, PlayersContext } from "../App";
+import { data, useNavigate } from "react-router-dom";
+import { UserContext, PlayersContext, SpyAmount } from "../App";
 import { useVerifyUser } from "../hooks/verifyUser";
-import AddUser from "./UserAdd";
-import SpyAmountComponent from "./SpyAmount";
-import { WordList } from "./Words";
-import { CustomWordAdd } from "./CustomWordAdd";
+import AddUser from "../components/UserAdd";
+import SpyAmountComponent from "../components/SpyAmount";
+import { WordList } from "../components/Words";
+import { CustomWordAdd } from "../components/CustomWordAdd";
 import "./Navigate.css";
 
 import { loadCustomWords } from "../hooks/customWords";
@@ -15,38 +15,65 @@ function Navigation() {
   const navigate = useNavigate();
   const { words, checked, setChecked, loading, error } = useWords();
   const { customWords, customWordsFunc } = loadCustomWords();
+
+  const { spies, setSpies } = useContext(SpyAmount);
+  const { user, setUser } = useContext(UserContext);
+  const { players, setPlayers } = useContext(PlayersContext);
+
+  const [spiesAm, setSpiesAm] = useState(1);
   const [formData, setFormData] = useState(null);
 
+  // info to pass before game starts
+  const [params, setParams] = useState({
+    playersParameter: null,
+    spyAmountParameter: null,
+    wordsParameter: null,
+  });
+
+  const handleGameStart = () => {
+    setParams({
+      playersParameter: players,
+      spyAmountParameter: spies,
+      wordsParameter: formData || checked,
+    });
+  };
+
+  // Amount spies - passed
+  const handleAmountPass = (data) => {
+    setSpiesAm(data);
+    setSpies({ amount: data });
+    // console.log('amount =>',data);
+  };
+
+  // checked words list - passed
   const handleFormSubmit = (data) => {
     setFormData(data);
     setChecked(data);
-    console.log('check =>',data);
+    // console.log('check =>',data);
   };
-  
+
   useEffect(() => {
     fetch("http://localhost:2000/dashboard", {
       method: "GET",
       credentials: "include", // sends cookie
     })
-    .then((res) => {
-      if (!res.ok) {
-        navigate("/"); // unauthorized
-        return null;
-      }
-      return res.json();
-    })
-    .then((data) => {
-      if (data?.user) setUser(data.user);
-    })
-    .catch((err) => {
-      console.log(err);
-      navigate("/");
-    });
+      .then((res) => {
+        if (!res.ok) {
+          navigate("/"); // unauthorized
+          return null;
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (data?.user) setUser(data.user);
+      })
+      .catch((err) => {
+        console.log(err);
+        navigate("/");
+      });
   }, [navigate]);
-  
-  const { user, setUser } = useContext(UserContext);
-  const { players, setPlayers } = useContext(PlayersContext);
-  
+
+  // handle of delete of user on parameter page
   const handleDelete = (id) => {
     setPlayers((prev) => {
       const copy = { ...prev };
@@ -54,7 +81,8 @@ function Navigation() {
       return copy;
     });
   };
-  
+
+  // update players list
   useEffect(() => {
     if (user) {
       setPlayers((prev) => ({
@@ -63,9 +91,10 @@ function Navigation() {
       }));
     }
   }, [user, setPlayers]);
-  
+
   useVerifyUser("/game-settings");
-  
+  console.log("оновлено==", params);
+
   return (
     <div className="navigation-panel">
       <h1>Додані гравці:</h1>
@@ -84,14 +113,14 @@ function Navigation() {
         ))}
       </ul>
       <AddUser />
-      <SpyAmountComponent />
+      <SpyAmountComponent amountPass={handleAmountPass}  countUpdate={handleAmountPass}/>
       <WordList customWordsLoad={customWords} onData={handleFormSubmit} />
       <CustomWordAdd reloadCustomWords={customWordsFunc} />
       <div className="menu-buttons">
         <a className="back-menu" href="/dashboard">
           Назад
         </a>
-        <button>Нова гра</button>
+        <button onClick={handleGameStart}>Нова гра</button>
       </div>
     </div>
   );
