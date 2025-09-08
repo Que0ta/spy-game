@@ -30,13 +30,31 @@ function Navigation() {
     wordsParameter: null,
   });
 
-  const handleGameStart = () => {
-    setParams({
-      playersParameter: players,
-      spyAmountParameter: spies,
-      wordsParameter: formData || checked,
+  const handleGameStart = async () => {
+    const newParams = {
+      players: players,
+      spyAmount: spies,
+      wordsList: formData || checked,
+    };
+
+    setParams(newParams);
+
+    await fetch("http://localhost:2000/game-start", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newParams),
+      credentials: "include"
     });
+
+    navigate("/game-single");
   };
+
+  //   useEffect(() => {
+  //   if (params) {
+  //     console.log("Params updated:", params);
+  //     // do something after params changes
+  //   }
+  // }, [params]);
 
   // Amount spies - passed
   const handleAmountPass = (data) => {
@@ -113,8 +131,15 @@ function Navigation() {
         ))}
       </ul>
       <AddUser />
-      <SpyAmountComponent amountPass={handleAmountPass}  countUpdate={handleAmountPass}/>
-      <WordList customWordsLoad={customWords} onData={handleFormSubmit} />
+      <SpyAmountComponent
+        amountPass={handleAmountPass}
+        countUpdate={handleAmountPass}
+      />
+      <WordList
+        customWordsLoad={customWords}
+        onData={handleFormSubmit}
+        updateDel={customWordsFunc}
+      />
       <CustomWordAdd reloadCustomWords={customWordsFunc} />
       <div className="menu-buttons">
         <a className="back-menu" href="/dashboard">

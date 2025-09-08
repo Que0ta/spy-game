@@ -13,7 +13,7 @@ export default function SpyAmountComponent( {amountPass, countUpdate} ) {
       const realAmount = amountSpies + 1;
       setSpies({ amount: realAmount });
       amountPass(realAmount);
-    } else if (spies.amount > Object.keys(players).length - 1){
+    } else if (spies.amount > Object.keys(players).length){
       const realAmount = amountSpies - 1;
       setSpies({ amount: realAmount });
       amountPass(realAmount);

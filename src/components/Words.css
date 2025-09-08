@@ -68,7 +68,6 @@
 /* Hover effect */
 .frame-word .word-list li:hover {
   transform: scale(1.05);
-  background: #357abd;
 }
 
 /* Checkbox styling for better mobile touch */
@@ -91,7 +90,7 @@
 .word-list li {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   padding: 12px 16px;
   border-radius: 16px;
   background: #888888;
@@ -104,6 +103,7 @@
   user-select: none; /* prevent accidental text selection */
   min-width: 60px; /* easier tap area */
   text-align: center;
+  height: 50px;
 
 }
 
@@ -164,4 +164,18 @@ i{
 .choose-all:active {
   transform: translateY(0);
   outline: none;
+}
+
+.custom .delete-btn{
+  background-color: red;
+  color: white;
+  font-weight: 900;
+  outline: none;
+  border: none;
+}
+
+.custom .delete-btn:hover{
+  outline: none;
+  border: none;
+  
 }

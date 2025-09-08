@@ -4,13 +4,14 @@ import { useWords } from "../hooks/getWords";
 import { loadCustomWords } from "../hooks/customWords";
 import "./Words.css";
 
-export function WordList({ customWordsLoad, onData }) {
+export function WordList({ customWordsLoad, onData, updateDel }) {
   const { words, checked, setChecked, loading, error } = useWords();
   const {
     customWords = [],
     loadingCustom,
     errorCustom,
     customWordsFunc,
+    setCustom
   } = loadCustomWords();
   // Fetch custom words after component mounts
   // Needs to be fixed later
@@ -25,13 +26,13 @@ export function WordList({ customWordsLoad, onData }) {
   if (errorCustom) return <p>Error with custom words: {error}</p>;
 
   if (!words.length) return <p>No words found.</p>;
-  
+
   const handleToggle = (word) => {
     const newChecked = { ...checked, [word]: !checked[word] };
     setChecked(newChecked);
     onData(newChecked); // pass the updated state immediately
   };
-  
+
   const checkToggle = () => {
     const allWords = [...words, ...wordCustomShow];
     const newChecked = {};
@@ -47,11 +48,44 @@ export function WordList({ customWordsLoad, onData }) {
     onData(newChecked); // pass the updated state immediately
   };
 
+  const handleDelete = async (word) => {
+    // Remove locally first
+    setCustom(customWords.filter((w) => w !== word));
+    
+    // Also remove from checked
+    setChecked((prev) => {
+      const newChecked = { ...prev };
+      delete newChecked[word];
+      return newChecked;
+    });
+    
+    // Send POST request to your backend endpoint
+    try {
+      const response = await fetch("http://localhost:2000/delete-word", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ word }), // send the word you want to delete
+      });
+      
+      if (!response.ok) {
+        throw new Error("Failed to delete word on server");
+      }
+      updateDel();
+      console.log("Word deleted on server:", word);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+
   const allWords = [...words, ...customWords];
   const allSelected = allWords.every((w) => checked[w]);
-
+  
   // check status of words =>
-  // console.log(checked);
+    // console.log(checked);
 
   return (
     <div className="frame-word">
@@ -83,6 +117,15 @@ export function WordList({ customWordsLoad, onData }) {
             onClick={() => handleToggle(word)}
           >
             <span>{word}</span>
+            <button
+              className="delete-btn"
+              onClick={(e) => {
+                e.stopPropagation(); // prevent toggle
+                handleDelete(word);
+              }}
+            >
+              X
+            </button>
           </li>
         ))}
       </ul>
