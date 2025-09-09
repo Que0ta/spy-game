@@ -7,6 +7,7 @@ import SpyAmountComponent from "../components/SpyAmount";
 import { WordList } from "../components/Words";
 import { CustomWordAdd } from "../components/CustomWordAdd";
 import "./Navigate.css";
+import "./Game.css";
 
 import { loadCustomWords } from "../hooks/customWords";
 import { useWords } from "../hooks/getWords";
@@ -30,6 +31,24 @@ function Navigation() {
     wordsParameter: null,
   });
 
+  const [popupOpen, setPopupOpen] = useState(false);
+
+  const handleConfirm = async () => {
+    setPopupOpen(false);
+    navigate("/game-single");
+  };
+  
+  const handleCancel = async () => {
+    await fetch("http://localhost:2000/game-start", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(params),
+      credentials: "include",
+    });
+    setPopupOpen(false); // just close popup, no navigation
+    navigate("/game-single");
+  };
+
   const handleGameStart = async () => {
     const newParams = {
       players: players,
@@ -38,15 +57,36 @@ function Navigation() {
     };
 
     setParams(newParams);
+    try {
+      const data = await fetch("http://localhost:2000/lobby", {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    await fetch("http://localhost:2000/game-start", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newParams),
-      credentials: "include"
-    });
+      const result = await data.json();
+      const status = result.status;
+      if (status === false) {
+        await fetch("http://localhost:2000/game-start", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newParams),
+          credentials: "include",
+        });
+      } else if (status === true) {
+        console.log("There is an active game!");
+        setPopupOpen(true);
+        // navigate("/game-single", {
+        //   state: { showPopup: true },
+        // });
+      }
+    } catch (err) {
+      console.log(err);
+    }
 
-    navigate("/game-single");
+    // запуск нової гри + очищення попередніх записів (backend)
   };
 
   //   useEffect(() => {
@@ -115,6 +155,21 @@ function Navigation() {
 
   return (
     <div className="navigation-panel">
+      {popupOpen && (
+        <div className="popup-overlay">
+          <div className="popup">
+            <p><b>Знайдено незавершену гру.</b><br />Бажаєте продовжити ? {location.state?.action}</p>
+            <div className="popup-buttons">
+              <button className="accept" onClick={handleCancel}>
+                Розпочати заново
+              </button>
+              <button className="decline" onClick={handleConfirm}>
+                Так
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <h1>Додані гравці:</h1>
       <ul className="users-list">
         {Object.entries(players).map(([key, value]) => (

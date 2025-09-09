@@ -1,78 +1,84 @@
-.game-container {
+/* Overlay background */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  margin: 20px auto;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  height: 100vh;
+  background-color: rgba(0,0,0,0.5); /* semi-transparent */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+
+}
+
+body.popup-overlay{
+  overflow: hidden;
+}
+
+/* Popup box */
+.popup {
   background-color: #fff;
-  font-family: Arial, sans-serif;
-}
-
-.word-box {
+  padding: 25px 30px;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
   text-align: center;
-  margin-bottom: 30px;
-  padding: 20px;
-  border-radius: 8px;
-  background-color: #f5f5f5;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  animation: popup-appear 0.2s ease-out;
+  margin: 0 20px;
 }
 
-.word {
-  font-size: 28px;
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-.players-box {
-  margin-top: 20px;
-}
-
-.players-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 15px;
-}
-
-.player-card {
-  padding: 15px;
-  border-radius: 10px;
-  border: 2px solid;
-  text-align: center;
-  font-weight: bold;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.player-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-.player-card.spy {
-  border-color: #e74c3c;
-  background-color: #fdecea;
-}
-
-.player-card.civilian {
-  border-color: #3498db;
-  background-color: #eaf6fd;
-}
-
-.player-name {
-  display: block;
-  margin-bottom: 8px;
+.popup p {
   font-size: 16px;
+  margin-bottom: 20px;
 }
 
-.player-role {
-  font-size: 14px;
-  color: #555;
+/* Buttons container */
+.popup-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
 }
 
-.loading,
-.error,
-.no-game {
-  text-align: center;
-  margin: 50px;
-  font-size: 18px;
-  color: #333;
+/* Buttons */
+.accept,
+.decline {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+/* Accept button style */
+.accept {
+  background-color: #f44336; /* red */
+  color: white;
+}
+.accept:hover {
+  background-color: #d32f2f;
+}
+
+/* Decline button style */
+.decline {
+  background-color: #4caf50; /* green */
+  color: white;
+}
+.decline:hover {
+  background-color: #388e3c;
+}
+
+/* Popup appear animation */
+@keyframes popup-appear {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
