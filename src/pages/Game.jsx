@@ -14,7 +14,7 @@ export default function Game() {
   return (
     <div className="">
       <h1>Дізнайтесь свою роль:</h1>
-      <div className="game">
+      <div className="game-block">
         {readyUsers.map((p) => (
           <FlipCard key={p.id} name={p.name} role={p.role} id={p.id} />
         ))}

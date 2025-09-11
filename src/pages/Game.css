@@ -1,4 +1,92 @@
-.game {
+/* Overlay background */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.5); /* semi-transparent */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+
+}
+
+body.popup-overlay{
+  overflow: hidden;
+}
+
+/* Popup box */
+.popup {
+  background-color: #fff;
+  padding: 25px 30px;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  animation: popup-appear 0.2s ease-out;
+  margin: 0 20px;
+}
+
+.popup p {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+/* Buttons container */
+.popup-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Buttons */
+.accept,
+.decline {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+/* Accept button style */
+.accept {
+  background-color: #f44336; /* red */
+  color: white;
+}
+.accept:hover {
+  background-color: #d32f2f;
+}
+
+/* Decline button style */
+.decline {
+  background-color: #4caf50; /* green */
+  color: white;
+}
+.decline:hover {
+  background-color: #388e3c;
+}
+
+/* Popup appear animation */
+@keyframes popup-appear {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* No changes up here <= */
+
+/* New changes */
+.game-block {
   display: inline-block;
   gap: 1.5rem;
   padding: 2rem;
