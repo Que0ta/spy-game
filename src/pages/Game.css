@@ -1,84 +1,58 @@
-/* Overlay background */
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background-color: rgba(0,0,0,0.5); /* semi-transparent */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-
-}
-
-body.popup-overlay{
+.game {
+  display: inline-block;
+  gap: 1.5rem;
+  padding: 2rem;
+  /* background: linear-gradient(135deg, #7c3aed, #4338ca); */
+  width: 40vw;
+  height: 30vh;
+  position: relative;
+  
   overflow: hidden;
 }
 
-/* Popup box */
-.popup {
-  background-color: #fff;
-  padding: 25px 30px;
-  border-radius: 12px;
-  max-width: 400px;
-  width: 90%;
-  text-align: center;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-  animation: popup-appear 0.2s ease-out;
-  margin: 0 20px;
-}
-
-.popup p {
-  font-size: 16px;
-  margin-bottom: 20px;
-}
-
-/* Buttons container */
-.popup-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-}
-
-/* Buttons */
-.accept,
-.decline {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  font-weight: 500;
+.card {
+  width: 40vw;
+  height: 30vh;
   cursor: pointer;
-  transition: all 0.2s;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
 }
 
-/* Accept button style */
-.accept {
-  background-color: #f44336; /* red */
+.card-inner {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  backface-visibility: hidden;
+  font-size: 1.25rem;
+  font-weight: bold;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+.card-front {
+  background: #ffffff;
+  color: #312e81;
+}
+
+.card-back {
+  background: #4f46e5;
   color: white;
-}
-.accept:hover {
-  background-color: #d32f2f;
-}
-
-/* Decline button style */
-.decline {
-  background-color: #4caf50; /* green */
-  color: white;
-}
-.decline:hover {
-  background-color: #388e3c;
-}
-
-/* Popup appear animation */
-@keyframes popup-appear {
-  from {
-    transform: scale(0.8);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
+  transform: rotateY(180deg);
 }

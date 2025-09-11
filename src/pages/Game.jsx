@@ -1,15 +1,40 @@
-import { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { getLobbyInfo } from "../hooks/getLobby";
+import { motion } from "framer-motion";
 import "./Game.css";
+import { div } from "framer-motion/client";
 
-function Game() {
-  const { readyUsers, chosenWord, readyLobby } = getLobbyInfo();
+export default function Game() {
+  const { readyUsers } = getLobbyInfo();
 
-  console.log(readyUsers);
-  console.log(chosenWord);
+  if (!readyUsers || readyUsers.length === 0) {
+    return <div className="loading">Loading lobby...</div>;
+  }
 
-
-  return <div>Test window</div>;
+  return (
+    <div className="">
+      <h1>Дізнайтесь свою роль:</h1>
+      <div className="game">
+        {readyUsers.map((p) => (
+          <FlipCard key={p.id} name={p.name} role={p.role} id={p.id} />
+        ))}
+      </div>
+    </div>
+  );
 }
 
-export default Game;
+function FlipCard({ name, role, id }) {
+  const [flipped, setFlipped] = useState(false);
+
+  return (
+    <div
+      className={`card ${flipped ? "flipped" : ""}`}
+      onClick={() => setFlipped(!flipped)}
+    >
+      <div className="card-inner">
+        <div className="card-front">{name}</div>
+        <div className="card-back">{role}</div>
+      </div>
+    </div>
+  );
+}
