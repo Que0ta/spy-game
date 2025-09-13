@@ -1,10 +1,22 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { getLobbyInfo } from "../hooks/getLobby";
-import { motion, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useMotionValue,
+  useTransform,
+} from "framer-motion";
 import { div } from "framer-motion/client";
 import "./Game.css";
 
 export default function Game() {
+  const navigate = useNavigate();
+
+  // animation rotation frames
+  const y = useMotionValue(0);
+  const rotate = useTransform(y, [-360, 0, 360], [-180, 0, 180]);
+
   const { readyUsers } = getLobbyInfo();
   const [index, setIndex] = useState(0);
   const [step, setStep] = useState(0); // 0 = front, 1 = back, 2 = black
@@ -26,17 +38,22 @@ export default function Game() {
   };
 
   const handleDragEnd = (_event, info) => {
-    const swipeThreshold = 70; // distance
-    const velocityThreshold = 600; // speed
+    const swipeThreshold = 80; // distance
+    const velocityThreshold = 1000; // speed
 
     if (
       step === 2 &&
       (Math.abs(info.offset.y) > swipeThreshold ||
         Math.abs(info.velocity.y) > velocityThreshold)
-    ) {
-      setStep(0);
-      setIndex((prev) => (prev + 1 >= readyUsers.length ? 0 : prev + 1));
-    }
+    )
+      if (index + 1 >= readyUsers.length) {
+        // 👉 last player reached → navigate
+        navigate("/game-window"); // change "/results" to your target route
+      } else {
+        // 👉 otherwise just go to next player
+        setStep(0);
+        setIndex((prev) => prev + 1);
+      }
   };
 
   return (
@@ -48,16 +65,16 @@ export default function Game() {
           <motion.div
             key={player.id + "-" + step}
             drag={step === 2 ? "y" : false}
-            dragConstraints={{ top: 0, bottom: 0 }} // no permanent move
-            dragElastic={0.2} // small stretch
-            dragMomentum={false} // avoid drifting sideways
-            style={{ x: 0 }} // lock X-axis
+            dragConstraints={{ top: 0, bottom: 0 }}
+            dragElastic={0.25}
+            dragMomentum={false}
+            style={{ y, rotate }} // 👈 just attach here
             onDragEnd={handleDragEnd}
             onClick={handleClick}
-            initial={step === 2 ? { y: 0, opacity: 1 } : { y: 50, opacity: 0 }}
+            initial={step === 2 ? { y: 0, opacity: 1 } : { y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={step === 2 ? { y: 0, opacity: 0 } : { y: -50, opacity: 0 }}
-            transition={{ duration: 0.4 }}
+            exit={step === 2 ? { y: 0, opacity: 0 } : { y: -10, opacity: 0 }}
+            transition={{ duration: 0.1 }}
             className={`card ${
               step === 0
                 ? "card-front"
@@ -70,7 +87,9 @@ export default function Game() {
             {step === 1 && <span className="card-text">{player.role}</span>}
             {/* step === 2 has no content inside card */}
             {step === 2 && (
-              <p className="hint">Swipe up or down to see the next card</p>
+              <p className="hint">
+                Свайпніть вгору чи вниз, щоб побачити наступного гравця
+              </p>
             )}
           </motion.div>
         </AnimatePresence>
