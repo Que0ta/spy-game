@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import { getLobbyInfo } from "../hooks/getLobby";
 import { motion, AnimatePresence } from "framer-motion";
-import "./Game.css";
 import { div } from "framer-motion/client";
+import "./Game.css";
 
 export default function Game() {
   const { readyUsers } = getLobbyInfo();
@@ -16,12 +16,24 @@ export default function Game() {
   const player = readyUsers[index];
 
   const handleClick = () => {
+    if (step < 2) {
+      setStep(step + 1);
+    } else {
+      // if on black card, show the role again
+      setStep(1);
+    }
     if (step < 2) setStep(step + 1);
   };
 
-  const handleDragEnd = (event, info) => {
-    if (step === 2 && (info.offset.y < -50 || info.offset.y > 50)) {
-      // swipe up or down to next card
+  const handleDragEnd = (_event, info) => {
+    const swipeThreshold = 70; // distance
+    const velocityThreshold = 600; // speed
+
+    if (
+      step === 2 &&
+      (Math.abs(info.offset.y) > swipeThreshold ||
+        Math.abs(info.velocity.y) > velocityThreshold)
+    ) {
       setStep(0);
       setIndex((prev) => (prev + 1 >= readyUsers.length ? 0 : prev + 1));
     }
@@ -36,12 +48,16 @@ export default function Game() {
           <motion.div
             key={player.id + "-" + step}
             drag={step === 2 ? "y" : false}
+            dragConstraints={{ top: 0, bottom: 0 }} // no permanent move
+            dragElastic={0.2} // small stretch
+            dragMomentum={false} // avoid drifting sideways
+            style={{ x: 0 }} // lock X-axis
             onDragEnd={handleDragEnd}
             onClick={handleClick}
-            initial={step === 2 ? {} : { y: 50, opacity: 0 }}
-            animate={step === 2 ? {} : { y: 0, opacity: 1 }}
-            exit={step === 2 ? {} : { y: -50, opacity: 0 }}
-            transition={{ duration: 0.5 }}
+            initial={step === 2 ? { y: 0, opacity: 1 } : { y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={step === 2 ? { y: 0, opacity: 0 } : { y: -50, opacity: 0 }}
+            transition={{ duration: 0.4 }}
             className={`card ${
               step === 0
                 ? "card-front"
@@ -59,8 +75,6 @@ export default function Game() {
           </motion.div>
         </AnimatePresence>
       </div>
-
-      {/* Move hint outside of card-wrapper */}
 
       <p className="progress">
         {index + 1} / {readyUsers.length}
