@@ -16,10 +16,11 @@ export function getLobbyInfo(){
       const result = await response.json();
       setChosenWord(result.word);
       setreadyUsers(result.players);
+      console.log('done lobby!');
     } catch (error) {
       console.error("Error sending data:", error);
     } finally{
-        console.log('done!');
+        // console.log('done!');
     }
   }, []);
 

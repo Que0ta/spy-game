@@ -31,31 +31,37 @@ function Navigation() {
     wordsParameter: null,
   });
 
+  const newParams = {
+    players: players,
+    spyAmount: spies,
+    wordsList: formData || checked,
+  };
+
   const [popupOpen, setPopupOpen] = useState(false);
 
   const handleConfirm = async () => {
     setPopupOpen(false);
     navigate("/game-single");
   };
-  
-  const handleCancel = async () => {
+
+  const handleStart = async () => {
+    setParams(newParams);
+
     await fetch("http://localhost:2000/game-start", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(params),
+      body: JSON.stringify(newParams),
       credentials: "include",
     });
     setPopupOpen(false); // just close popup, no navigation
     navigate("/game-single");
   };
 
-  const handleGameStart = async () => {
-    const newParams = {
-      players: players,
-      spyAmount: spies,
-      wordsList: formData || checked,
-    };
+  const createNewGame = async () => {
+    setPopupOpen(false);
+  };
 
+  const handleGameStart = async () => {
     setParams(newParams);
     try {
       const data = await fetch("http://localhost:2000/lobby", {
@@ -68,14 +74,7 @@ function Navigation() {
 
       const result = await data.json();
       const status = result.status;
-      if (status === false) {
-        await fetch("http://localhost:2000/game-start", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(newParams),
-          credentials: "include",
-        });
-      } else if (status === true) {
+      if (status === true) {
         console.log("There is an active game!");
         setPopupOpen(true);
         // navigate("/game-single", {
@@ -88,6 +87,11 @@ function Navigation() {
 
     // запуск нової гри + очищення попередніх записів (backend)
   };
+
+  useEffect(() => {
+    handleGameStart();
+    // You can perform side effects here, like data fetching, DOM manipulation, etc.
+  }, []); // The empty dependency array ensures this effect runs only once after the initial render
 
   //   useEffect(() => {
   //   if (params) {
@@ -158,10 +162,14 @@ function Navigation() {
       {popupOpen && (
         <div className="popup-overlay">
           <div className="popup">
-            <p><b>Знайдено незавершену гру.</b><br />Бажаєте продовжити ? {location.state?.action}</p>
+            <p>
+              <b>Знайдено незавершену гру.</b>
+              <br />
+              Бажаєте продовжити ? {location.state?.action}
+            </p>
             <div className="popup-buttons">
-              <button className="accept" onClick={handleCancel}>
-                Розпочати заново
+              <button className="accept" onClick={createNewGame}>
+                Створити нову
               </button>
               <button className="decline" onClick={handleConfirm}>
                 Так
@@ -200,7 +208,7 @@ function Navigation() {
         <a className="back-menu" href="/dashboard">
           Назад
         </a>
-        <button onClick={handleGameStart}>Нова гра</button>
+        <button onClick={handleStart}>Нова гра</button>
       </div>
     </div>
   );

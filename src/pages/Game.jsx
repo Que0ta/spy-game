@@ -27,6 +27,10 @@ export default function Game() {
 
   const player = readyUsers[index];
 
+  const skipRole = () => {
+    if (index + 1 < readyUsers.length) setIndex((prev) => prev + 1);
+  }
+
   const handleClick = () => {
     if (step < 2) {
       setStep(step + 1);
@@ -94,7 +98,10 @@ export default function Game() {
           </motion.div>
         </AnimatePresence>
       </div>
-
+      <div className="menu-buttons">
+        <button className={`${index + 2 > readyUsers.length ? "hidden" : ""}`} onClick={skipRole}>Пропустити</button>
+        <a className="skip-button" href="/game-window">Перейти до гри</a>
+      </div>
       <p className="progress">
         {index + 1} / {readyUsers.length}
       </p>

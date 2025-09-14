@@ -64,7 +64,7 @@ export function CustomWordAdd({ reloadCustomWords } ) {
           name="word"
           value={word}
           onChange={(e) => setWord(e.target.value)}
-          placeholder="Enter a word"
+          placeholder="Запишіть нове слово тут"
           required
         />
         <button className="add-word" type="submit">
