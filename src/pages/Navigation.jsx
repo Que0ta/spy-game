@@ -1,7 +1,8 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { data, useNavigate } from "react-router-dom";
 import { UserContext, PlayersContext, SpyAmount } from "../App";
 import { useVerifyUser } from "../hooks/verifyUser";
+import { getLobbyInfo } from "../hooks/getLobby";
 import AddUser from "../components/UserAdd";
 import SpyAmountComponent from "../components/SpyAmount";
 import { WordList } from "../components/Words";
@@ -14,6 +15,7 @@ import { useWords } from "../hooks/getWords";
 
 function Navigation() {
   const navigate = useNavigate();
+  const { readyUsers, readyLobby } = getLobbyInfo();
   const { words, checked, setChecked, loading, error } = useWords();
   const { customWords, customWordsFunc } = loadCustomWords();
 
@@ -22,7 +24,23 @@ function Navigation() {
   const { players, setPlayers } = useContext(PlayersContext);
 
   const [spiesAm, setSpiesAm] = useState(1);
-  const [formData, setFormData] = useState(null);
+  const [formData, setFormData] = useState(null)
+  const [lastID, setLastID] = useState(null); 
+
+  useEffect(() => {
+    if (readyUsers) {
+      readyUsers.map((item) => {
+        console.log(item);
+        if (item.id != "0" && !(item.id in players)) {
+          setPlayers((prev) => ({
+            ...prev,
+            [item.id]: item.name,
+          }));
+        }
+      });
+    }
+
+  }, [readyUsers, setPlayers]);
 
   // info to pass before game starts
   const [params, setParams] = useState({
@@ -74,7 +92,7 @@ function Navigation() {
 
       const result = await data.json();
       const status = result.status;
-      if (status === true) {
+      if (status === true && result.word != "") {
         console.log("There is an active game!");
         setPopupOpen(true);
         // navigate("/game-single", {
@@ -155,7 +173,7 @@ function Navigation() {
   }, [user, setPlayers]);
 
   useVerifyUser("/game-settings");
-  console.log("оновлено==", params);
+  // console.log("оновлено==", params);
 
   return (
     <div className="navigation-panel">

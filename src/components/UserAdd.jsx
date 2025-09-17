@@ -2,25 +2,30 @@ import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../App";
 import { PlayersContext } from "../App";
 
-function AddUser() {
+function AddUser(  ) {
   const { players, setPlayers } = useContext(PlayersContext);
+
   const [showInput, setShowInput] = useState(false);
   const [newName, setNewName] = useState("");
-  const [count, setCount] = useState(1);
 
-  const handleAddClick = () => {
-    setShowInput(true);
-  };
+  // Compute initial count based on current players
+  const initialCount = players && Object.keys(players).length > 0
+    ? Math.max(...Object.keys(players).map(Number)) + 1
+    : 0;
+    
+  const [count, setCount] = useState(initialCount);
+
+  const handleAddClick = () => setShowInput(true);
 
   const handleSave = () => {
     if (!newName.trim()) return;
 
-    setPlayers((prev) => ({
+    setPlayers(prev => ({
       ...prev,
-      [count]: newName,
+      [initialCount]: newName,
     }));
 
-    setCount((c) => c + 1);
+    setCount(c => c + 1);
     setNewName("");
     setShowInput(false);
   };
@@ -47,6 +52,5 @@ function AddUser() {
     </div>
   );
 }
-
 
 export default AddUser;

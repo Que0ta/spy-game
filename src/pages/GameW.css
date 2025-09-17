@@ -36,6 +36,7 @@
     background: none; 
     right: 5px;
     top: 5px;
+    cursor:auto;
 }
 
 /* styles.css */
@@ -83,3 +84,48 @@ button:active {
         height: 20px;
     }
 }
+
+/* Test message */
+/* styles.css */
+
+
+/* Overlay wrapper */
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  
+  /* blur everything behind */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  
+  background: rgba(0,0,0,0.3); /* optional dark tint */
+}
+
+/* Message box */
+.center-box {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 12px;
+  padding: 24px 32px;
+  max-width: 500px;
+  color: white;
+  text-align: center;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+}
+.center-box h2 {
+  margin: 0 0 12px;
+  font-size: clamp(16px, 2vw, 26px);
+}
+.center-box p {
+  margin: 0;
+  opacity: 0.9;
+  font-size: clamp(14px, 2vw, 20px);
+}
+
+/* .start-game{
+  background-color: ;
+} */

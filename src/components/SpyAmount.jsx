@@ -9,11 +9,11 @@ export default function SpyAmountComponent( {amountPass, countUpdate} ) {
   
   const increase = (amountSpies) => {
     // console.log(spies.amount);
-    if (spies.amount < Object.keys(players).length - 1) {
+    if (spies.amount < Object.keys(players).length - 4) {
       const realAmount = amountSpies + 1;
       setSpies({ amount: realAmount });
       amountPass(realAmount);
-    } else if (spies.amount > Object.keys(players).length){
+    } else if (spies.amount > Object.keys(players).length - 1){
       const realAmount = amountSpies - 1;
       setSpies({ amount: realAmount });
       amountPass(realAmount);

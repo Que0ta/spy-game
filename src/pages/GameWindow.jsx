@@ -1,12 +1,17 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { getLobbyInfo } from "../hooks/getLobby";
 import { useWords } from "../hooks/getWords";
+import { getStatusGame } from "../hooks/gameStatus";
 import { usePostData } from "../hooks/postPlayerCheck";
+import { deleteLobby } from "../hooks/deleteLobby";
 import "./GameW.css";
-import { select } from "framer-motion/client";
 
 function GameWindow() {
+  const navigate = useNavigate();
+  const { lobbyReset } = deleteLobby();
   const { readyUsers, readyLobby } = getLobbyInfo();
+  const { gameStatus, getResult } = getStatusGame();
   const { words } = useWords();
   const { postData, error } = usePostData("http://localhost:2000/update-role");
 
@@ -23,6 +28,19 @@ function GameWindow() {
     kicked: "./civilian.png",
   };
 
+  if (gameStatus && gameStatus.gameWon === "civilians") {
+    console.log("won civil!");
+    // lobbyReset();
+  } else if (gameStatus && gameStatus.gameWon === "spies") {
+    console.log("spies won!");
+    // lobbyReset();
+  }
+
+  const handleNewGame = async() =>{
+    lobbyReset();
+    navigate('/game-settings');
+  }
+
   const voting = async () => {
     if (selectedRole === "spy") {
       const playerSend = [selected, "found"];
@@ -34,11 +52,34 @@ function GameWindow() {
       //   console.log(result);
     }
     readyLobby();
-    console.log("voted!");
+    getResult();
   };
 
   return (
     <div className="game-window">
+      {gameStatus && gameStatus.gameWon != "" ? (
+        <div className="overlay">
+          <div className="side-blur left"></div>
+          <div className="center-box">
+            <h2>
+              {gameStatus.gameWon === "spies" ? "Шпигуни" : "Мирні жителі"}{" "}
+              виграли!
+            </h2>
+            <p>
+              {gameStatus.gameWon === "civilians"
+                ? `Шпигунів ${readyUsers
+                    ?.filter((player) => player.role === "spy")
+                    .map((player) => player.name)
+                    .join(", ")} було успішно викрито!`
+                : "Секретне місце жителів успішно розпізнано!"}
+            </p>
+            <button className="start-game" onClick={handleNewGame}>Розпочати нову гру</button>
+          </div>
+          <div className="side-blur right"></div>
+        </div>
+      ) : (
+        ""
+      )}
       <div className="players-list">
         {readyUsers?.map((player, index) => (
           <div

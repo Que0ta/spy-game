@@ -14,9 +14,9 @@ export function getLobbyInfo(){
         credentials: "include",
       });
       const result = await response.json();
-      setChosenWord(result.word);
-      setreadyUsers(result.players);
-      console.log('done lobby!');
+      setChosenWord(result.word || null);
+      setreadyUsers(result.players || null);
+      // console.log('done lobby!');
     } catch (error) {
       console.error("Error sending data:", error);
     } finally{
