@@ -1,22 +1,26 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getLobbyInfo } from "../hooks/getLobby";
-import { useWords } from "../hooks/getWords";
+
 import { getStatusGame } from "../hooks/gameStatus";
 import { usePostData } from "../hooks/postPlayerCheck";
 import { deleteLobby } from "../hooks/deleteLobby";
+import { GuessWord } from "../components/guessWord";
 import "./GameW.css";
 
 function GameWindow() {
   const navigate = useNavigate();
   const { lobbyReset } = deleteLobby();
-  const { readyUsers, readyLobby } = getLobbyInfo();
+  const { readyUsers, readyLobby, chosenWord } = getLobbyInfo();
   const { gameStatus, getResult } = getStatusGame();
-  const { words } = useWords();
+  
   const { postData, error } = usePostData("http://localhost:2000/update-role");
 
   const [selected, setSelected] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
+
+  const [spyPopup, setSpyPopup] = useState(null);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
 
   const statusMap = {
     found: "status-grey",
@@ -41,10 +45,28 @@ function GameWindow() {
     navigate('/game-settings');
   }
 
+  const reCheck = async () => {
+    setSpyPopup(false);
+    if (selectedAnswer === chosenWord) {
+      const playerSend = ["", "guessed"];
+      const result = await postData(playerSend);
+    }
+    getResult();
+  }
+
+  const checkData = (word)=>{
+    if (selectedAnswer === word) setSelectedAnswer('');
+    else{
+      setSelectedAnswer(word);
+    }
+    console.log(word);
+  }
+
   const voting = async () => {
     if (selectedRole === "spy") {
       const playerSend = [selected, "found"];
       const result = await postData(playerSend);
+      setSpyPopup(true);
       //   console.log(result);
     } else if (selectedRole === "civilian") {
       const playerSend = [selected, "kicked"];
@@ -57,7 +79,8 @@ function GameWindow() {
 
   return (
     <div className="game-window">
-      {gameStatus && gameStatus.gameWon != "" ? (
+      {spyPopup ? <GuessWord onPressBtn={reCheck} onSelectAnswer={checkData} selectedAnswer={selectedAnswer}/> : ''}
+      {gameStatus && gameStatus.gameWon != "" && !spyPopup ? (
         <div className="overlay">
           <div className="side-blur left"></div>
           <div className="center-box">

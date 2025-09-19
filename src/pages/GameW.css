@@ -119,6 +119,7 @@ button:active {
 .center-box h2 {
   margin: 0 0 12px;
   font-size: clamp(16px, 2vw, 26px);
+  color: gold;
 }
 .center-box p {
   margin: 0;
@@ -126,6 +127,6 @@ button:active {
   font-size: clamp(14px, 2vw, 20px);
 }
 
-/* .start-game{
-  background-color: ;
-} */
+.start-game{
+  margin-top: 15px
+}
