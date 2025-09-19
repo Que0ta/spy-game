@@ -45,6 +45,7 @@ function GameWindow() {
     navigate('/game-settings');
   }
 
+  // added chance for spy win
   const reCheck = async () => {
     setSpyPopup(false);
     if (selectedAnswer === chosenWord) {
@@ -54,6 +55,7 @@ function GameWindow() {
     getResult();
   }
 
+  // selecting answer when spy is found
   const checkData = (word)=>{
     if (selectedAnswer === word) setSelectedAnswer('');
     else{
@@ -62,6 +64,7 @@ function GameWindow() {
     console.log(word);
   }
 
+  // checking players after voting
   const voting = async () => {
     if (selectedRole === "spy") {
       const playerSend = [selected, "found"];
