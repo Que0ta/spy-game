@@ -1,10 +1,10 @@
 import { useEffect, useState, useCallback } from "react";
 
-export function getLobbyInfo(){
-    const [readyUsers, setreadyUsers] = useState(null);
-    const [chosenWord, setChosenWord] = useState(null);
+export function getLobbyInfo() {
+  const [readyUsers, setreadyUsers] = useState(null);
+  const [chosenWord, setChosenWord] = useState(null);
 
-    const readyLobby = useCallback(async () => {
+  const readyLobby = useCallback(async () => {
     try {
       const response = await fetch("http://localhost:2000/lobby", {
         method: "GET",
@@ -19,15 +19,14 @@ export function getLobbyInfo(){
       // console.log('done lobby!');
     } catch (error) {
       console.error("Error sending data:", error);
-    } finally{
-        // console.log('done!');
+    } finally {
+      // console.log('done!');
     }
   }, []);
 
-  useEffect( ()=> {
+  useEffect(() => {
     readyLobby(); // fetched data
   }, [readyLobby]);
 
-
-  return { readyUsers, chosenWord, readyLobby }
+  return { readyUsers, chosenWord, readyLobby };
 }
